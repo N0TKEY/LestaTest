@@ -77,13 +77,16 @@ func _button_pressed(actualButton, second=false):
 	match net[actualButtonNum]:
 		1,2,3:
 			if lastButton!=actualButtonNum or is_second:
-				for i in 25:
-					# Выделение пустых соседних ячеек для фишки зелёного/оранжевого/белого цвета.
-					if (net[i]==0 and abs(i/5 - actualButtonNum/5)<=1 and abs(i%5 - actualButtonNum%5)<=1): 
-						net[i] = 5
-						adreas[i].texture_normal = load ("res://image/chooseButton1.png")
-						adreas[i].texture_pressed = load ("res://image/chooseButton2.png")
-						adreas[i].texture_hover = load ("res://image/chooseButton3.png")
+				for i in range(-1, 2):
+					for j in range(-1, 2):
+						var checkedNum = actualButtonNum+5*i+j
+						if checkedNum<25 and checkedNum>-1:
+							if net[checkedNum]==0 and !(j==-1 and checkedNum%5==4) and !(j==1 and checkedNum%5==0): # and abs((actualButtonNum+5*i+j)/5 - actualButtonNum/5)<=1 and abs((actualButtonNum+5*i+j)%5 - actualButtonNum%5)<=1: 
+								# Выделение пустых соседних ячеек для фишки зелёного/оранжевого/белого цвета.
+								net[checkedNum] = 5
+								adreas[checkedNum].texture_normal = load ("res://image/chooseButton1.png")
+								adreas[checkedNum].texture_pressed = load ("res://image/chooseButton2.png")
+								adreas[checkedNum].texture_hover = load ("res://image/chooseButton3.png")
 				lastButton = actualButtonNum
 				# Смена выбранной фишки.
 				lastButtonTexture = adreas[actualButtonNum].texture_normal
@@ -108,18 +111,24 @@ func _button_pressed(actualButton, second=false):
 func _on_TextureButton_mouse_entered(actualButton):
 	var actualButtonNum = int(actualButton.editor_description)
 	if net[actualButtonNum]!=4 and net[actualButtonNum]!=5 and net[actualButtonNum]!=0:
-		for i in 25:
-			# Выделение пустых соседних ячеек для фишки зелёного/оранжевого/белого цвета при наведении.
-			if (net[i]==0 and abs(i/5 - actualButtonNum/5)<=1 and abs(i%5 - actualButtonNum%5)<=1): 
-				adreas[i].texture_normal = load ("res://image/chooseButton1.png")
+		for i in range(-1, 2):
+			for j in range(-1, 2):
+				var checkedNum = actualButtonNum+5*i+j
+				if checkedNum<25 and checkedNum>-1:
+					if net[checkedNum]==0 and !(j==-1 and checkedNum%5==4) and !(j==1 and checkedNum%5==0):
+						# Выделение пустых соседних ячеек для фишки зелёного/оранжевого/белого цвета при наведении.
+						adreas[checkedNum].texture_normal = load ("res://image/chooseButton1.png")
 
 func _on_TextureButton_mouse_exited(actualButton):
 	var actualButtonNum = int(actualButton.editor_description)
 	if net[actualButtonNum]!=4 and net[actualButtonNum]!=5 and net[actualButtonNum]!=0:
-		for i in 25:
-			# Снятие выделения пустых соседних ячеек для фишки зелёного/оранжевого/белого цвета при наведении.
-			if (net[i]==0 and abs(i/5 - actualButtonNum/5)<=1 and abs(i%5 - actualButtonNum%5)<=1): 
-				adreas[i].texture_normal = load ("res://image/simpleButton1.png")
+		for i in range(-1, 2):
+			for j in range(-1, 2):
+				var checkedNum = actualButtonNum+5*i+j
+				if checkedNum<25 and checkedNum>-1:
+					if net[checkedNum]==0 and !(j==-1 and checkedNum%5==4) and !(j==1 and checkedNum%5==0):
+						# Снятие выделения пустых соседних ячеек для фишки зелёного/оранжевого/белого цвета при наведении.
+						adreas[checkedNum].texture_normal = load ("res://image/simpleButton1.png")
 
 
 ######################################## Проверка на победу.
