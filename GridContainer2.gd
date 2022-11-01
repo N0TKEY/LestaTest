@@ -1,6 +1,8 @@
 extends GridContainer
 
-var net = [1,4,2,4,3,1,0,2,0,3,1,4,2,4,3,1,0,2,0,3,1,4,2,4,3] # Аттавизм (изначально выигрышная комбинция), который можно было бы задать пустым. Однако я ещё не знаю, эффективнее ли это.
+# Аттавизм (изначально выигрышная комбинция), который можно было бы задать пустым. ↓↓
+# Однако я ещё не знаю, эффективнее ли это. По идее, это экономнее.
+var net = [1,4,2,4,3,1,0,2,0,3,1,4,2,4,3,1,0,2,0,3,1,4,2,4,3] 
 var adreas = [] # Небходимо для работы с кнопками.
 var lastButton # Хранит номер нажатой до этого кнопки.
 var testBool = false # Для проверки состояния победы.
@@ -30,27 +32,27 @@ func _ready():
 		add_child(Slot)
 		adreas.append(Slot) # Сохранение кнопок для последующей работы с ними.
 		Slot.editor_description = str(i) # Нумерация кнопок.
-		Slot.connect("pressed", self, "_button_pressed", [Slot])
-		Slot.connect("mouse_entered", self, "_on_TextureButton_mouse_entered", [Slot])
-		Slot.connect("mouse_exited", self, "_on_TextureButton_mouse_exited", [Slot])
+		Slot.connect("pressed", self, "_button_pressed", [Slot]) # Основное действие игрока.
+		Slot.connect("mouse_entered", self, "_on_TextureButton_mouse_entered", [Slot]) # Выделение при наведении на фишку.
+		Slot.connect("mouse_exited", self, "_on_TextureButton_mouse_exited", [Slot]) # Снятие выделения.
 		match net[i]:
-			0:
+			0: # Обычная пустая ячейка
 				Slot.texture_normal = load ("res://image/simpleButton1.png")
 				Slot.texture_pressed = load ("res://image/simpleButton2.png")
 				Slot.texture_hover = load ("res://image/simpleButton3.png")
-			1:
+			1: # Фишка - зелёный слайм
 				Slot.texture_normal = load ("res://image/greenButton1.png")
 				Slot.texture_pressed = load ("res://image/greenButton2.png")
 				Slot.texture_hover = load ("res://image/greenButton3.png")
-			2:
+			2: # Фишка - оранжевая тыква
 				Slot.texture_normal = load ("res://image/orangeButton1.png")
 				Slot.texture_pressed = load ("res://image/orangeButton2.png")
 				Slot.texture_hover = load ("res://image/orangeButton3.png")
-			3:
+			3: # Фишка - белая свеча
 				Slot.texture_normal = load ("res://image/whiteButton1.png")
 				Slot.texture_pressed = load ("res://image/whiteButton2.png")
 				Slot.texture_hover = load ("res://image/whiteButton3.png")
-			4:
+			4: # Блок
 				Slot.texture_normal = load ("res://image/blockButton1.png")
 				Slot.texture_pressed = load ("res://image/blockButton2.png")
 				Slot.texture_hover = load ("res://image/blockButton3.png")
@@ -58,7 +60,6 @@ func _ready():
 
 
 ######################################### Обработка нажатия любой кнопки.
-# Улучшу подход, хочу смотреть только 8 вокруг кнопки, а не все 25.
 func _button_pressed(actualButton, second=false):
 	if testBool==true:
 		_on_AcceptDialog_confirmed() # На случай, если игрок проигнорирует сообщение об окончании игры.
