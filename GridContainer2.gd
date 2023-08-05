@@ -16,7 +16,7 @@ func _ready():
 	for i in 25:
 		if net[i]!=4:
 			while true:
-				var shaker = int(round(rand_range(0,3)))
+				var shaker = int(round(randf_range(0,3)))
 				if shaker==0: 
 					if utilArr[shaker]+1<5:
 						net[i]=shaker
@@ -32,9 +32,9 @@ func _ready():
 		add_child(Slot)
 		adreas.append(Slot) # Сохранение кнопок для последующей работы с ними.
 		Slot.editor_description = str(i) # Нумерация кнопок.
-		Slot.connect("pressed", self, "_button_pressed", [Slot]) # Основное действие игрока.
-		Slot.connect("mouse_entered", self, "_on_TextureButton_mouse_entered", [Slot]) # Выделение при наведении на фишку.
-		Slot.connect("mouse_exited", self, "_on_TextureButton_mouse_exited", [Slot]) # Снятие выделения.
+		Slot.connect("pressed", Callable(self, "_button_pressed").bind(Slot)) # Основное действие игрока.
+		Slot.connect("mouse_entered", Callable(self, "_on_TextureButton_mouse_entered").bind(Slot)) # Выделение при наведении на фишку.
+		Slot.connect("mouse_exited", Callable(self, "_on_TextureButton_mouse_exited").bind(Slot)) # Снятие выделения.
 		match net[i]:
 			0: # Обычная пустая ячейка
 				Slot.texture_normal = load ("res://image/simpleButton1.png")
@@ -143,9 +143,10 @@ func isWin():
 		var winner = AcceptDialog.new()
 		add_child(winner)
 		winner.dialog_text = "You win!"
-		winner.window_title = "Congratulation!"
+		winner.title = "Congratulation!"
+		winner.min_size = Vector2i(250, 70)
 		winner.popup_centered()
-		winner.connect("confirmed", self, "_on_AcceptDialog_confirmed") # Один из вариантов закрытия игры. Запасной был ранее при нажатии.
+		winner.connect("confirmed", Callable(self, "_on_AcceptDialog_confirmed")) # Один из вариантов закрытия игры. Запасной был ранее при нажатии.
 
 
 ######################################## Выход при победе.
